@@ -1,0 +1,184 @@
+ @extends('layouts.plantilla')
+ @section('content')
+ <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-6 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Usuarios</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Lista de usuarios</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <h4 class="card-title">Listado de Categorias <button class="btn btn-outline-primary btn-rounded" data-toggle="modal" data-target="#modalcrear"><i class="fa fa-check"></i>Nuevo</button></h4>
+                                <hr>
+                                @if(Session::has('crear'))
+                                <div class="alert alert-success alert-rounded"> <i class="fa fa-check"></i> <strong>Felicidades</strong> {{Session::get('crear')}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                                </div>
+                                @endif
+                                @if(Session::has('actualizar'))
+                                <div class="alert alert-info alert-rounded"> <i class="fa fa-check"></i> <strong>Felicidades</strong> {{Session::get('actualizar')}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                                </div>
+                                @endif
+                                @if(Session::has('borrar'))
+                                <div class="alert alert-danger alert-rounded"> <i class="fa fa-check"></i> <strong>Ops!</strong> {{Session::get('borrar')}}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                                </div>
+                                @endif
+                                <div class="table-responsive m-t-40">
+                                    <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>E-mail</th>
+                                                <th>Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nombre</th>
+                                                <th>E-mail</th>
+                                                <th>Opciones</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            @foreach($usuarios as $usr)
+                                            <tr>
+                                                <td>{{$usr -> id}}</td>
+                                                <td>{{$usr -> name}}</td>
+                                                <td>{{$usr -> email}}</td>
+                                                <td>
+                                                    
+                                                    <a data-toggle="tooltip" title="Editar Usuario" href="{{URL::action('UsuarioController@edit', $usr -> id)}}">
+                                                        <button type="button" class="btn btn-info btn-circle"><i class="fa fa-pencil" data-toggle="modal" data-target="#modalEditar"></i> </button>
+                                                    </a>
+                                                    <a data-toggle="tooltip" title="Eliminar Usuario">
+                                                        <button type="button" class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modalEliminar-{{$usr -> id}}"><i class="fa fa-times"></i> </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+
+                                            
+                                            <!-- Modal Eliminar -->
+                                                <!-- ============================================================== -->
+                                                <div class="col-md-4">
+                                                    <!-- sample modal content -->
+                                                    <div id="modalEliminar-{{$usr -> id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                    <h4 class="modal-title">Eliminar Usuario {{$usr->name}}</h4>
+                                                                </div>
+                                                                <hr>
+                                                                {{Form::open(array('action' => array('UsuarioController@destroy', $usr -> id), 'method' => 'delete'))}}
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                             <div class="form-group">            
+                                                                               <center><p>¿estas seguro que desea eliminar a este usuario?</p></center>          
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> 
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cancelar</button>
+                                                                    
+                                                                    <button type="submit" class="btn btn-danger waves-effect waves-light">Eliminar</button>
+                                                                </div>
+                                                                {{Form::close()}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- ============================================================== -->
+                                                <!-- End modal Content --> 
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+
+
+
+                <!-- Model Nuevo Articulo -->
+                <!-- ============================================================== -->
+                <div class="col-md-4">
+                                <!-- sample modal content -->
+                                <div id="modalcrear" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">Crear nuevo Usuario</h4>
+                                            </div>
+                                                @if (count($errors) > 0)
+                                                <div class="alert alert-danger">
+                                                    <ul>
+                                                        @foreach($errors -> all() as $error)
+                                                            <li>{{$error}}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                                @endif
+                                            <form action="{{url('seguridad/usuario')}}" method="POST" class="form-material m-t-40">
+                                            {{csrf_field() }}
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                         <div class="form-group">            
+                                                           <label for="name">Nombre:</label>
+                                                            <input type="text" class="form-control" name="name" placeholder="ingrese su Nombre..." required value="{{old('name')}}">            
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                         <div class="form-group">            
+                                                           <label for="email">E-mail:</label>
+                                                            <input type="email" class="form-control" name="email" placeholder="ingrese su E-mail..." required value="{{old('email')}}">            
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                         <div class="form-group">            
+                                                           <label for="password">Password:</label>
+                                                            <input type="password" class="form-control" name="password" placeholder="ingrese su E-mail..." required >            
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                         <div class="form-group">            
+                                                           <label for="password_confirmation">Password Confirmation:</label>
+                                                            <input type="password" class="form-control" name="password_confirmation" placeholder="repita su contraseña..." required >            
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">Cerrar</button>
+                                                <button type="submit" class="btn btn-danger waves-effect waves-light">Guardar</button>
+                                            </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                <!-- ============================================================== -->
+                <!-- End modal Content -->
+
+@endsection
